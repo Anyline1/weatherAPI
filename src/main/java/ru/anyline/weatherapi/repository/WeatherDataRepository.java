@@ -1,14 +1,13 @@
 package ru.anyline.weatherapi.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.anyline.weatherapi.model.WeatherData;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
-public interface WeatherDataRepository extends JpaRepository<WeatherData, Long> {
-    Optional<WeatherData> findByCityNameAndDate(String cityName, LocalDate date);
-
-    List<WeatherData> findByDateBefore(LocalDate expirationDate);
+public interface WeatherDataRepository extends ReactiveCrudRepository<WeatherData, Long> {
+    Flux<WeatherData> findByCityNameAndDate(String cityName, LocalDate date);
+    Mono<Void> deleteAll();
 }

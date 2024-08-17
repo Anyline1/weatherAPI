@@ -1,12 +1,12 @@
 package ru.anyline.weatherapi.service;
 
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import ru.anyline.weatherapi.model.WeatherData;
 import ru.anyline.weatherapi.model.WeatherDataDTO;
 import ru.anyline.weatherapi.repository.WeatherDataRepository;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 public class WeatherServiceImpl implements WeatherService {
@@ -17,9 +17,9 @@ public class WeatherServiceImpl implements WeatherService {
     public WeatherServiceImpl(WeatherDataRepository weatherDataRepository) {
         this.weatherDataRepository = weatherDataRepository;
     }
-
+    //переделать имплементацию
     @Override
-    public Optional<WeatherDataDTO> getWeatherData(String cityName, LocalDate date) {
+    public Flux<WeatherDataDTO> getWeatherData(String cityName, LocalDate date) {
         return weatherDataRepository.findByCityNameAndDate(cityName, date)
                 .map(this::convertToDTO);
     }

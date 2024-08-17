@@ -1,19 +1,17 @@
 package ru.anyline.weatherapi.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Data;
+import lombok.*;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 
-@Entity
+@Table("weather_data")
 @Data
+@NoArgsConstructor
 public class WeatherData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String cityName;
     private LocalDate date;
@@ -25,4 +23,15 @@ public class WeatherData {
     private double maxTemperature;
     private double pressure;
 
+
+    public WeatherData(String cityName,
+                       LocalDate date,
+                       double temperature,
+                       double minTemperature,
+                       double maxTemperature,
+                       double humidity,
+                       double windSpeed,
+                       double cloudiness,
+                       double pressure) {
+    }
 }
