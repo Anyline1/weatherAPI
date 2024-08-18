@@ -9,6 +9,7 @@ import ru.anyline.weatherapi.model.WeatherDataDTO;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class WeatherApiClient {
@@ -21,44 +22,44 @@ public class WeatherApiClient {
 
     public WeatherDataDTO fetchWeatherData(String cityName, LocalDate date) {
         RestTemplate restTemplate = new RestTemplate();
-        String formattedDate = date.toString();
+        String url = String.format("%s?q=%s&dt=%s&key=%s", weatherApiUrl, cityName, date, weatherApiKey);
 
-        String url = String.format("%s?q=%s&dt=%s&key=%s", weatherApiUrl, cityName, formattedDate, weatherApiKey);
-
-        Map<String, Object> response;
         try {
-            response = restTemplate.getForObject(url, Map.class);
-        } catch (HttpClientErrorException e) {
-            System.err.println("Error fetching data from WeatherAPI: " + e.getMessage());
-            return null;
-        }
+            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
 
-        if (response != null && response.containsKey("forecast")) {
-            Map<String, Object> forecast = (Map<String, Object>) response.get("forecast");
+            if (response != null) {
+                Map<String, Object> day = extractDayData(response);
 
-            if (forecast != null && forecast.containsKey("forecastday")) {
-                List<Map<String, Object>> forecastDays = (List<Map<String, Object>>) forecast.get("forecastday");
-
-                if (forecastDays != null && !forecastDays.isEmpty()) {
-                    Map<String, Object> firstDay = forecastDays.get(0);
-                    Map<String, Object> day = (Map<String, Object>) firstDay.get("day");
-
-                    WeatherDataDTO weatherDataDTO = new WeatherDataDTO();
-                    weatherDataDTO.setCityName(cityName);
-                    weatherDataDTO.setDate(date);
-                    weatherDataDTO.setTemperature((Double) day.getOrDefault("avgtemp_c", 0.0));
-                    weatherDataDTO.setMinTemperature((Double) day.getOrDefault("mintemp_c", 0.0));
-                    weatherDataDTO.setMaxTemperature((Double) day.getOrDefault("maxtemp_c", 0.0));
-                    weatherDataDTO.setHumidity(((Number) day.getOrDefault("avghumidity", 0)).doubleValue());
-                    weatherDataDTO.setWindSpeed(((Number) day.getOrDefault("maxwind_kph", 0)).doubleValue());
-                    weatherDataDTO.setCloudiness(((Number) day.getOrDefault("daily_chance_of_rain", 0)).doubleValue());
-                    weatherDataDTO.setPressure(((Number) day.getOrDefault("pressure_mb", 0)).doubleValue());
-
-                    return weatherDataDTO;
+                if (day != null) {
+                    return mapToWeatherDataDTO(cityName, date, day);
                 }
             }
+        } catch (HttpClientErrorException e) {
+            System.err.println("Error fetching data from WeatherAPI: " + e.getMessage());
         }
 
         return null;
+    }
+
+    private Map<String, Object> extractDayData(Map<String, Object> response) {
+        return Optional.ofNullable((Map<String, Object>) response.get("forecast"))
+                .map(forecast -> (List<Map<String, Object>>) forecast.get("forecastday"))
+                .filter(forecastDays -> !forecastDays.isEmpty())
+                .map(forecastDays -> (Map<String, Object>) forecastDays.get(0).get("day"))
+                .orElse(null);
+    }
+
+    private WeatherDataDTO mapToWeatherDataDTO(String cityName, LocalDate date, Map<String, Object> day) {
+        return WeatherDataDTO.builder()
+                .cityName(cityName)
+                .date(date)
+                .temperature((Double) day.getOrDefault("avgtemp_c", 0.0))
+                .minTemperature((Double) day.getOrDefault("mintemp_c", 0.0))
+                .maxTemperature((Double) day.getOrDefault("maxtemp_c", 0.0))
+                .humidity(((Number) day.getOrDefault("avghumidity", 0)).doubleValue())
+                .windSpeed(((Number) day.getOrDefault("maxwind_kph", 0)).doubleValue())
+                .cloudiness(((Number) day.getOrDefault("daily_chance_of_rain", 0)).doubleValue())
+                .pressure(((Number) day.getOrDefault("pressure_mb", 0)).doubleValue())
+                .build();
     }
 }

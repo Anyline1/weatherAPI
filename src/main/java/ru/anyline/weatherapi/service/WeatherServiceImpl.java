@@ -25,16 +25,16 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     private WeatherDataDTO convertToDTO(WeatherData weatherData) {
-        WeatherDataDTO dto = new WeatherDataDTO();
-        dto.setCityName(weatherData.getCityName());
-        dto.setDate(weatherData.getDate());
-        dto.setTemperature(weatherData.getTemperature());
-        dto.setHumidity(weatherData.getHumidity());
-        dto.setWindSpeed(weatherData.getWindSpeed());
-        dto.setCloudiness(weatherData.getCloudiness());
-        dto.setMinTemperature(weatherData.getMinTemperature());
-        dto.setMaxTemperature(weatherData.getMaxTemperature());
-        dto.setPressure(weatherData.getPressure());
-        return dto;
+        return WeatherDataDTO.builder()
+                .cityName(weatherData.getCityName())
+                .date(weatherData.getDate())
+                .temperature(weatherData.getTemperature())
+                .minTemperature(weatherData.getMinTemperature())
+                .maxTemperature(weatherData.getMaxTemperature())
+                .humidity(weatherData.getHumidity())
+                .pressure(weatherData.getPressure())
+                .windSpeed(weatherData.getWindSpeed())
+                .cloudiness(weatherData.getCloudiness())
+                .build();
     }
 }
