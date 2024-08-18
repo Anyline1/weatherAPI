@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface WeatherService {
     Optional<WeatherDataDTO> getWeatherData(String cityName, LocalDate date);
+
 }

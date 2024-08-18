@@ -24,6 +24,8 @@ public class WeatherServiceImpl implements WeatherService {
                 .map(this::convertToDTO);
     }
 
+
+
     private WeatherDataDTO convertToDTO(WeatherData weatherData) {
         return WeatherDataDTO.builder()
                 .cityName(weatherData.getCityName())
