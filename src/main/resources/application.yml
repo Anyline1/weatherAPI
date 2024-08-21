@@ -16,9 +16,9 @@ spring:
 
 weather:
   timer:
-    interval: 60000  # Интервал между запросами в миллисекундах (1 минута)
+    interval: 60000
   cache:
-    cleanup: "*/60 * * * * ?"  # Интервал очистки кэша в миллисекундах (1 минута)
+    cleanup: "*/60 * * * * ?"
   scheduler:
     city: "Moscow"
 
