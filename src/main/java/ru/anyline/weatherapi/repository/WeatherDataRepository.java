@@ -10,6 +10,4 @@ import java.util.Optional;
 public interface WeatherDataRepository extends JpaRepository<WeatherData, Long> {
     Optional<WeatherData> findByCityNameAndDate(String cityName, LocalDate date);
     List<WeatherData> findByDateBefore(LocalDate expirationDate);
-
-    Optional<WeatherData> findByCityName(String cityName);
 }
