@@ -64,7 +64,7 @@ public class WeatherScheduler {
 
     @Scheduled(cron = "${weather.cache.cleanup}")
     public void getFromCache() {
-        LocalDate expirationDate = LocalDate.now().minusDays(7); // Удаляем данные старше 7 дней
+        LocalDate expirationDate = LocalDate.now().minusDays(7); 
         List<WeatherData> oldData = weatherDataRepository.findByDateBefore(expirationDate);
 
         if (!oldData.isEmpty()) {
