@@ -25,7 +25,7 @@ public class WeatherServiceImpl implements WeatherService {
     @Override
     @Cacheable(value = "weatherCache", key = "#cityName + #date")
     public Optional<WeatherDataDTO> getWeatherData(String cityName, LocalDate date) {
-        return Optional.of(weatherDataRepository.findTopByCityNameAndDate(cityName, date)
+        return Optional.of(weatherDataRepository.findByCityNameAndDate(cityName, date)
                 .map(this::convertToDTO)
                 .orElseGet(() -> {
                     WeatherDataDTO weatherDataDTO = openWeatherMapClient.fetchWeatherData(cityName, date);
