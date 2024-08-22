@@ -1,4 +1,6 @@
 spring:
+  cache:
+    type: redis
   application:
     name: WeatherAPI
   datasource:
@@ -13,12 +15,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  data:
+    redis:
+      port: 6379
+      host: localhost
 
 weather:
   timer:
-    interval: 60000
+    interval: 600000
   cache:
-    cleanup: "*/60 * * * * ?"
+    cleanup: "0 */1 * * * ?" #@Scheduled(cron = "0 */1 * * * ?")
   scheduler:
     city: "Moscow"
 
