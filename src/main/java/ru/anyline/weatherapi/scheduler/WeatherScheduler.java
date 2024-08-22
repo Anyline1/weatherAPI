@@ -46,16 +46,18 @@ public class WeatherScheduler {
     }
 
     private void saveWeatherData(WeatherDataDTO weatherDataDTO) {
-        WeatherData weatherData = new WeatherData();
-        weatherData.setCityName(weatherDataDTO.getCityName());
-        weatherData.setDate(weatherDataDTO.getDate());
-        weatherData.setTemperature(weatherDataDTO.getTemperature());
-        weatherData.setMinTemperature(weatherDataDTO.getMinTemperature());
-        weatherData.setMaxTemperature(weatherDataDTO.getMaxTemperature());
-        weatherData.setHumidity(weatherDataDTO.getHumidity());
-        weatherData.setWindSpeed(weatherDataDTO.getWindSpeed());
-        weatherData.setCloudiness(weatherDataDTO.getCloudiness());
-        weatherData.setPressure(weatherDataDTO.getPressure());
+
+        WeatherData weatherData = WeatherData.builder()
+                        .cityName(weatherDataDTO.getCityName())
+                .date(weatherDataDTO.getDate())
+                .temperature(weatherDataDTO.getTemperature())
+                .minTemperature(weatherDataDTO.getMinTemperature())
+                .maxTemperature(weatherDataDTO.getMaxTemperature())
+                .humidity(weatherDataDTO.getHumidity())
+                .windSpeed(weatherDataDTO.getWindSpeed())
+                .cloudiness(weatherDataDTO.getCloudiness())
+                .pressure(weatherDataDTO.getPressure())
+                                .build();
 
         weatherDataRepository.save(weatherData);
     }
