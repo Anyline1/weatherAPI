@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class WeatherService {
@@ -72,5 +73,11 @@ public class WeatherService {
 
         return data;
     }
+
+    @Scheduled(fixedRateString = "${timer.cache-ttl}")
+    public void clearCache() {
+        Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection().serverCommands();
+    }
+
 }
 
