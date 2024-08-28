@@ -1,5 +1,6 @@
 package ru.anyline.weatherapi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -17,18 +18,21 @@ import java.util.List;
 public class WeatherController {
 
     private final WeatherRepository weatherRepository;
-    private final RedisTemplate<String, WeatherData> redisTemplate;
+
+    private final WeatherService weatherService;
 
     @Autowired
     public WeatherController(WeatherRepository weatherRepository,
-                             RedisTemplate<String, WeatherData> redisTemplate) {
+                             RedisTemplate<String, WeatherData> redisTemplate, WeatherService weatherService) {
         this.weatherRepository = weatherRepository;
-        this.redisTemplate = redisTemplate;
+        this.weatherService = weatherService;
     }
 
     @GetMapping("/current")
-    public ResponseEntity<WeatherData> getCurrentWeather(@RequestParam String city) {
-        WeatherData cachedData = redisTemplate.opsForValue().get(city);
+    public ResponseEntity<WeatherData> getCurrentWeather(@RequestParam String city) throws JsonProcessingException {
+
+        WeatherData cachedData = weatherService.getWeather(city);
+
         if (cachedData != null) {
             return ResponseEntity.ok(cachedData);
         }
@@ -42,6 +46,7 @@ public class WeatherController {
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
     }
 
     @GetMapping("/all")

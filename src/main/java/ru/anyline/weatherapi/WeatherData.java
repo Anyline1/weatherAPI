@@ -1,5 +1,6 @@
 package ru.anyline.weatherapi;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,13 +10,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class WeatherData {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class WeatherData implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
