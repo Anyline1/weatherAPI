@@ -10,127 +10,48 @@ import java.util.List;
 public class WeatherDTO {
 
     private String name;
+
     private Main main;
+
     private Wind wind;
+
     private Clouds clouds;
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Main getMain() {
-        return main;
-    }
-
-    public void setMain(Main main) {
-        this.main = main;
-    }
-
-    public Wind getWind() {
-        return wind;
-    }
-
-    public void setWind(Wind wind) {
-        this.wind = wind;
-    }
-
-    public Clouds getClouds() {
-        return clouds;
-    }
-
-    public void setClouds(Clouds clouds) {
-        this.clouds = clouds;
-    }
-
+    @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Main {
 
-        private double temp;
-        private double tempMin;
-        private double tempMax;
-        private int pressure;
-        private int humidity;
-
         @JsonProperty("temp")
-        public double getTemp() {
-            return temp;
-        }
-
-        public void setTemp(double temp) {
-            this.temp = temp;
-        }
+        private double temp;
 
         @JsonProperty("temp_min")
-        public double getTempMin() {
-            return tempMin;
-        }
-
-        public void setTempMin(double tempMin) {
-            this.tempMin = tempMin;
-        }
+        private double tempMin;
 
         @JsonProperty("temp_max")
-        public double getTempMax() {
-            return tempMax;
-        }
+        private double tempMax;
 
-        public void setTempMax(double tempMax) {
-            this.tempMax = tempMax;
-        }
+        private int pressure;
 
-        public int getPressure() {
-            return pressure;
-        }
+        private int humidity;
 
-        public void setPressure(int pressure) {
-            this.pressure = pressure;
-        }
-
-        public int getHumidity() {
-            return humidity;
-        }
-
-        public void setHumidity(int humidity) {
-            this.humidity = humidity;
-        }
     }
 
+    @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Wind {
+
         private double speed;
+
         private int deg;
 
-        public double getSpeed() {
-            return speed;
-        }
-
-        public void setSpeed(double speed) {
-            this.speed = speed;
-        }
-
-        public int getDeg() {
-            return deg;
-        }
-
-        public void setDeg(int deg) {
-            this.deg = deg;
-        }
     }
 
+    @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Clouds {
+
         private int all;
 
-        public int getAll() {
-            return all;
-        }
-
-        public void setAll(int all) {
-            this.all = all;
-        }
     }
 }
