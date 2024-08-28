@@ -17,12 +17,13 @@ public class RedisConfig {
         RedisTemplate<String, WeatherData> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
 
-        // Настройка ObjectMapper с поддержкой JavaTimeModule
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
         return template;
     }
 }

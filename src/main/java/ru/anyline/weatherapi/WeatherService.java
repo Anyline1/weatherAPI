@@ -1,5 +1,7 @@
 package ru.anyline.weatherapi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -11,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +21,8 @@ import java.util.Objects;
 public class WeatherService {
 
     private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
+
     private final WeatherRepository weatherRepository;
     private final RedisTemplate<String, WeatherData> redisTemplate;
 
@@ -35,9 +40,11 @@ public class WeatherService {
 
     @Autowired
     public WeatherService(RestTemplateBuilder builder,
+                          ObjectMapper objectMapper,
                           WeatherRepository weatherRepository,
                           RedisTemplate<String, WeatherData> redisTemplate) {
         this.restTemplate = builder.build();
+        this.objectMapper = objectMapper;
         this.weatherRepository = weatherRepository;
         this.redisTemplate = redisTemplate;
     }
@@ -84,6 +91,18 @@ public class WeatherService {
     @Scheduled(fixedRateString = "${timer.cache-ttl}")
     public void clearCache() {
         Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection().serverCommands();
+    }
+
+    public WeatherData getWeather(String city) throws JsonProcessingException {
+
+        Object cachedData = redisTemplate.opsForValue().get(city);
+
+        LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) cachedData;
+
+        String jsonString = objectMapper.writeValueAsString(map);
+
+        return objectMapper.readValue(jsonString, WeatherData.class);
+
     }
 
 }
