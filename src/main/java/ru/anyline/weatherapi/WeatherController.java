@@ -16,13 +16,12 @@ import java.util.List;
 @RequestMapping("/weather")
 public class WeatherController {
 
-    private final WeatherService weatherService;
     private final WeatherRepository weatherRepository;
     private final RedisTemplate<String, WeatherData> redisTemplate;
 
     @Autowired
-    public WeatherController(WeatherService weatherService, WeatherRepository weatherRepository, RedisTemplate<String, WeatherData> redisTemplate) {
-        this.weatherService = weatherService;
+    public WeatherController(WeatherRepository weatherRepository,
+                             RedisTemplate<String, WeatherData> redisTemplate) {
         this.weatherRepository = weatherRepository;
         this.redisTemplate = redisTemplate;
     }
@@ -34,7 +33,6 @@ public class WeatherController {
             return ResponseEntity.ok(cachedData);
         }
 
-        // если в кэше нет, загружаем из базы
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startOfDay = now.withHour(0).withMinute(0).withSecond(0).withNano(0);
         List<WeatherData> data = weatherRepository.findByCityAndTimestampBetween(city, startOfDay, now);
