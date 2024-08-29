@@ -28,3 +28,9 @@ weather:
 timer:
   interval: 600000
   cache-ttl: 3600000
+
+logging:
+  level:
+    root: INFO
+    ru.anyline.weatherapi: DEBUG
+
