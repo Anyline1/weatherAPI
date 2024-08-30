@@ -1,4 +1,4 @@
-package ru.anyline.weatherapi;
+package ru.anyline.weatherapi.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -8,6 +8,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import ru.anyline.weatherapi.WeatherData;
 
 @Configuration
 public class RedisConfig {
