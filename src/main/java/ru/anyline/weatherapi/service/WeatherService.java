@@ -1,4 +1,4 @@
-package ru.anyline.weatherapi;
+package ru.anyline.weatherapi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +9,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import ru.anyline.weatherapi.WeatherDTO;
+import ru.anyline.weatherapi.WeatherData;
+import ru.anyline.weatherapi.WeatherRepository;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -38,15 +41,18 @@ public class WeatherService {
     @Value("${weather.api.key}")
     private String apiKey;
 
+    private final KafkaProducerService kafkaProducerService;
+
     @Autowired
     public WeatherService(RestTemplateBuilder builder,
                           ObjectMapper objectMapper,
                           WeatherRepository weatherRepository,
-                          RedisTemplate<String, WeatherData> redisTemplate) {
+                          RedisTemplate<String, WeatherData> redisTemplate, KafkaProducerService kafkaProducerService) {
         this.restTemplate = builder.build();
         this.objectMapper = objectMapper;
         this.weatherRepository = weatherRepository;
         this.redisTemplate = redisTemplate;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     @Scheduled(fixedRateString = "${timer.interval}")
@@ -61,6 +67,7 @@ public class WeatherService {
                 WeatherData data = convertToWeatherData(response);
                 weatherRepository.save(data);
                 redisTemplate.opsForValue().set(city, data, Duration.ofHours(1));
+                kafkaProducerService.sendWeatherData(city, data);
             }
         }
     }
