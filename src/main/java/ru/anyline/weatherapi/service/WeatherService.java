@@ -2,6 +2,7 @@ package ru.anyline.weatherapi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 @Service
 public class WeatherService {
@@ -54,6 +56,7 @@ public class WeatherService {
         this.redisTemplate = redisTemplate;
         this.kafkaProducerService = kafkaProducerService;
     }
+
 
     @Scheduled(fixedRateString = "${timer.interval}")
     public void fetchAndStoreWeatherData() {
