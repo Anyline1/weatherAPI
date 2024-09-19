@@ -24,25 +24,30 @@ public class WeatherController {
     private final WeatherService weatherService;
 
     @GetMapping("/current")
-    public ResponseEntity<WeatherData> getCurrentWeather(@RequestParam String city) throws JsonProcessingException {
+public ResponseEntity<WeatherData> getCurrentWeather(@RequestParam String city) throws JsonProcessingException {
 
-        WeatherData cachedData = weatherService.getWeather(city);
-
-        if (cachedData != null) {
-            return ResponseEntity.ok(cachedData);
-        }
-
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime startOfDay = now.withHour(0).withMinute(0).withSecond(0).withNano(0);
-        List<WeatherData> data = weatherRepository.findByCityAndTimestampBetween(city, startOfDay, now);
-
-        if (!data.isEmpty()) {
-            return ResponseEntity.ok(data.get(data.size() - 1));
-        }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
+    // Check for SQL injection
+    if (!city.matches("[a-zA-Z ]+")) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+
+    WeatherData cachedData = weatherService.getWeather(city);
+
+    if (cachedData != null) {
+        return ResponseEntity.ok(cachedData);
+    }
+
+    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime startOfDay = now.withHour(0).withMinute(0).withSecond(0).withNano(0);
+    List<WeatherData> data = weatherRepository.findByCityAndTimestampBetween(city, startOfDay, now);
+
+    if (!data.isEmpty()) {
+        return ResponseEntity.ok(data.get(data.size() - 1));
+    }
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+}
+
 
     @GetMapping("/all")
     public List<WeatherData> getAllWeatherData() {
