@@ -157,4 +157,49 @@ public void shouldValidateInputCityNameToPreventSQLInjection() throws JsonProces
         assertEquals(weatherDataList.get(weatherDataList.size() - 1), responseEntity.getBody());
     }
 
+    @Test
+    public void shouldReturnLatestWeatherDataWhenMultipleRequestsForSameCityWithinShortTimeFrame() throws InterruptedException, ExecutionException {
+        String city = "City";
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+        Callable<ResponseEntity<WeatherData>> task1 = () -> weatherController.getCurrentWeather(city);
+        Callable<ResponseEntity<WeatherData>> task2 = () -> weatherController.getCurrentWeather(city);
+
+        Future<ResponseEntity<WeatherData>> future1 = executorService.submit(task1);
+        Future<ResponseEntity<WeatherData>> future2 = executorService.submit(task2);
+
+        ResponseEntity<WeatherData> response1 = future1.get();
+        ResponseEntity<WeatherData> response2 = future2.get();
+
+        assertNotNull(response1);
+        assertNotNull(response2);
+        assertEquals(HttpStatus.OK, response1.getStatusCode());
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        assertEquals(response1.getBody(), response2.getBody());
+
+        executorService.shutdown();
+    }
+
+    @Test
+    public void shouldReturnCachedWeatherDataWhenAvailableForCityWithinShortTimeFrame() throws JsonProcessingException {
+        String city = "City";
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = now.withHour(0).withMinute(0).withSecond(0).withNano(0);
+
+        WeatherData cachedData = WeatherData.builder()
+                .city(city)
+                .timestamp(now)
+                .temperature(25.0)
+                .build();
+
+        when(weatherService.getWeather(eq(city))).thenReturn(cachedData);
+        when(weatherRepository.findByCityAndTimestampBetween(eq(city), eq(startOfDay), eq(now)))
+                .thenReturn(Collections.emptyList());
+
+        ResponseEntity<WeatherData> responseEntity = weatherController.getCurrentWeather(city);
+
+        assertNotNull(responseEntity);
+        assertEquals(ResponseEntity.ok(cachedData), responseEntity);
+    }
+
 }
