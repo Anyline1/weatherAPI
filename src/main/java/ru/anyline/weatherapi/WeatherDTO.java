@@ -10,11 +10,8 @@ import java.util.List;
 public class WeatherDTO {
 
     private String name;
-
     private Main main;
-
     private Wind wind;
-
     private Clouds clouds;
 
 
@@ -24,15 +21,11 @@ public class WeatherDTO {
 
         @JsonProperty("temp")
         private double temp;
-
         @JsonProperty("temp_min")
         private double tempMin;
-
         @JsonProperty("temp_max")
         private double tempMax;
-
         private int pressure;
-
         private int humidity;
 
     }
@@ -42,7 +35,6 @@ public class WeatherDTO {
     public static class Wind {
 
         private double speed;
-
         private int deg;
 
     }

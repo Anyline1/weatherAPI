@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Weather Information</title>
+    <meta charset="UTF-8">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid black;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Weather Data</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>City</th>
+        <th>Temperature (°C)</th>
+        <th>Humidity (%)</th>
+        <th>Wind Speed (m/s)</th>
+        <th>Cloudiness (%)</th>
+        <th>Min Temp (°C)</th>
+        <th>Max Temp (°C)</th>
+        <th>Pressure (hPa)</th>
+        <th>Timestamp</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="weather : ${weatherList}">
+        <td th:text="${weather.city}">City</td>
+        <td th:text="${weather.temperature}">Temperature</td>
+        <td th:text="${weather.humidity}">Humidity</td>
+        <td th:text="${weather.windSpeed}">Wind Speed</td>
+        <td th:text="${weather.cloudiness}">Cloudiness</td>
+        <td th:text="${weather.minTemp}">Min Temp</td>
+        <td th:text="${weather.maxTemp}">Max Temp</td>
+        <td th:text="${weather.pressure}">Pressure</td>
+        <td th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Timestamp</td>
+
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
