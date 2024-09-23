@@ -27,7 +27,6 @@ public class WeatherService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-
     private final WeatherRepository weatherRepository;
     private final RedisTemplate<String, WeatherData> redisTemplate;
 

@@ -17,7 +17,7 @@ public class KafkaProducerService {
 
     public void sendWeatherData(String city, WeatherData weatherData) {
         kafkaTemplate.send(TOPIC, city, weatherData);
-        System.out.println("Sent weather data for city: " + city);
+//        System.out.println("Sent weather data for city: " + city);
     }
 }
 

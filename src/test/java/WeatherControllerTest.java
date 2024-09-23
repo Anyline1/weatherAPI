@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.anyline.weatherapi.WeatherController;
+import ru.anyline.weatherapi.controller.WeatherController;
 import ru.anyline.weatherapi.WeatherData;
 import ru.anyline.weatherapi.WeatherRepository;
 import ru.anyline.weatherapi.service.WeatherService;

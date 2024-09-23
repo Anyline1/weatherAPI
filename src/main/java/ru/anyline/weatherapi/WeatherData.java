@@ -24,25 +24,15 @@ public class WeatherData implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String city;
-
     private double temperature;
-
     private int humidity;
-
     private double windSpeed;
-
     private int cloudiness;
-
     private double minTemp;
-
     private double maxTemp;
-
     private int pressure;
-
     private LocalDateTime timestamp;
-
 
 }
 
