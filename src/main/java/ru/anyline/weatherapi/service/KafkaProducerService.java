@@ -3,7 +3,7 @@ package ru.anyline.weatherapi.service;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.anyline.weatherapi.WeatherData;
+import ru.anyline.weatherapi.entity.WeatherData;
 
 @Service
 @AllArgsConstructor

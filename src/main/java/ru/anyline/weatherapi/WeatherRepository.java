@@ -2,6 +2,7 @@ package ru.anyline.weatherapi;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ru.anyline.weatherapi.entity.WeatherData;
 
 import java.time.LocalDateTime;
 import java.util.List;

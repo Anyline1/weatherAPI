@@ -8,8 +8,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ru.anyline.weatherapi.WeatherDTO;
-import ru.anyline.weatherapi.WeatherData;
+import ru.anyline.weatherapi.entity.WeatherDTO;
+import ru.anyline.weatherapi.entity.WeatherData;
 import ru.anyline.weatherapi.WeatherRepository;
 
 import java.time.Duration;

@@ -1,6 +1,6 @@
 package ru.anyline.weatherapi.service;
 
-import ru.anyline.weatherapi.WeatherData;
+import ru.anyline.weatherapi.entity.WeatherData;
 
 public interface KafkaService {
 
