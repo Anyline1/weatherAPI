@@ -202,4 +202,41 @@ public void shouldValidateInputCityNameToPreventSQLInjection() throws JsonProces
         assertEquals(ResponseEntity.ok(cachedData), responseEntity);
     }
 
+    @Test
+    public void shouldReturnLatestWeatherDataWhenCacheIsExpired() throws JsonProcessingException {
+        String city = "City";
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = now.withHour(0).withMinute(0).withSecond(0).withNano(0);
+
+        WeatherData expiredCacheData = WeatherData.builder()
+                .city(city)
+                .timestamp(startOfDay.minusHours(1))
+                .temperature(25.0)
+                .build();
+
+        WeatherData latestData = WeatherData.builder()
+                .city(city)
+                .timestamp(now)
+                .temperature(26.0)
+                .build();
+
+        when(weatherService.getWeather(eq(city))).thenReturn(expiredCacheData);
+        when(weatherRepository.findByCityAndTimestampBetween(eq(city), eq(startOfDay), eq(now)))
+                .thenReturn(Collections.singletonList(latestData));
+
+        ResponseEntity<WeatherData> responseEntity = weatherController.getCurrentWeather(city);
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(latestData, responseEntity.getBody());
+    }
+
+    @Test
+    public void shouldReturnErrorWhenCityNameIsTooLong() throws JsonProcessingException {
+        String longCityName = "ThisIsAVeryLongCityNameThatExceedsTheAllowedLength";
+        ResponseEntity<WeatherData> responseEntity = weatherController.getCurrentWeather(longCityName);
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
 }
