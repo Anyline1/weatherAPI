@@ -14,7 +14,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import ru.anyline.weatherapi.WeatherData;
+import ru.anyline.weatherapi.entity.WeatherData;
 
 import java.util.HashMap;
 import java.util.Map;

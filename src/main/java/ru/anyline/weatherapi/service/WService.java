@@ -1,7 +1,7 @@
 package ru.anyline.weatherapi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import ru.anyline.weatherapi.WeatherData;
+import ru.anyline.weatherapi.entity.WeatherData;
 
 public interface WService {
 
