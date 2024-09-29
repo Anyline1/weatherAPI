@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 @Service
-public class WeatherService {
+public class WeatherService implements WService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
