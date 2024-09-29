@@ -2,10 +2,8 @@ package ru.anyline.weatherapi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -20,15 +18,17 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 
 @Service
-public class WeatherService {
+@RequiredArgsConstructor
+public class WeatherService implements WService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final WeatherRepository weatherRepository;
     private final RedisTemplate<String, WeatherData> redisTemplate;
+    private final KafkaProducerService kafkaProducerService;
+
 
     @Value("${weather.api.openWeatherMapUrl}")
     private String openWeatherMapUrl;
@@ -42,19 +42,6 @@ public class WeatherService {
     @Value("${weather.api.key}")
     private String apiKey;
 
-    private final KafkaProducerService kafkaProducerService;
-
-    @Autowired
-    public WeatherService(RestTemplateBuilder builder,
-                          ObjectMapper objectMapper,
-                          WeatherRepository weatherRepository,
-                          RedisTemplate<String, WeatherData> redisTemplate, KafkaProducerService kafkaProducerService) {
-        this.restTemplate = builder.build();
-        this.objectMapper = objectMapper;
-        this.weatherRepository = weatherRepository;
-        this.redisTemplate = redisTemplate;
-        this.kafkaProducerService = kafkaProducerService;
-    }
 
 
     @Scheduled(fixedRateString = "${timer.interval}")

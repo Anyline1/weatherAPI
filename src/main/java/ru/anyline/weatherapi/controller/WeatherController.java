@@ -26,10 +26,9 @@ public class WeatherController {
     private final WeatherService weatherService;
 
     @GetMapping("/current")
-public ResponseEntity<WeatherData> getCurrentWeather(@RequestParam String city) throws JsonProcessingException {
+    public ResponseEntity<WeatherData> getCurrentWeather(@RequestParam String city) throws JsonProcessingException {
 
-    // Check for SQL injection
-    if (!city.matches("[a-zA-Z ]+")) {
+    if (!city.matches("[a-zA-Z ]+") || city.isEmpty() || city.length() > 49) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
