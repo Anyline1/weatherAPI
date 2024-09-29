@@ -2,11 +2,8 @@ package ru.anyline.weatherapi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -21,7 +18,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +27,8 @@ public class WeatherService implements WService {
     private final ObjectMapper objectMapper;
     private final WeatherRepository weatherRepository;
     private final RedisTemplate<String, WeatherData> redisTemplate;
+    private final KafkaProducerService kafkaProducerService;
+
 
     @Value("${weather.api.openWeatherMapUrl}")
     private String openWeatherMapUrl;
@@ -44,7 +42,6 @@ public class WeatherService implements WService {
     @Value("${weather.api.key}")
     private String apiKey;
 
-    private final KafkaProducerService kafkaProducerService;
 
 
     @Scheduled(fixedRateString = "${timer.interval}")
