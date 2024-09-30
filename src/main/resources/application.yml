@@ -33,4 +33,7 @@ logging:
   level:
     root: INFO
     ru.anyline.weatherapi: DEBUG
+springdoc:
+  swagger-ui:
+    path: /swagger
 
