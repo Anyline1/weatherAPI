@@ -1,53 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Weather Information</title>
+    <title>Current Weather</title>
     <meta charset="UTF-8">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid black;
-            text-align: left;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/weather.css">
 </head>
 <body>
 
-<h2>Weather Data</h2>
+<div class="weather-container">
+    <header>
+        <h1>Weather Forecast</h1>
+        <form method="get" action="/current">
+            <label>
+                <input type="text" name="city" placeholder="Enter city" required>
+            </label>
+            <button type="submit">Get Weather</button>
+        </form>
+    </header>
 
-<table>
-    <thead>
-    <tr>
-        <th>City</th>
-        <th>Temperature (°C)</th>
-        <th>Humidity (%)</th>
-        <th>Wind Speed (m/s)</th>
-        <th>Cloudiness (%)</th>
-        <th>Min Temp (°C)</th>
-        <th>Max Temp (°C)</th>
-        <th>Pressure (hPa)</th>
-        <th>Timestamp</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="weather : ${weatherList}">
-        <td th:text="${weather.city}">City</td>
-        <td th:text="${weather.temperature}">Temperature</td>
-        <td th:text="${weather.humidity}">Humidity</td>
-        <td th:text="${weather.windSpeed}">Wind Speed</td>
-        <td th:text="${weather.cloudiness}">Cloudiness</td>
-        <td th:text="${weather.minTemp}">Min Temp</td>
-        <td th:text="${weather.maxTemp}">Max Temp</td>
-        <td th:text="${weather.pressure}">Pressure</td>
-        <td th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Timestamp</td>
+    <div class="weather-info" th:if="${weather}">
+        <h2>Weather in <span th:text="${weather.city}">City</span></h2>
+        <div class="weather-details">
+            <p>Temperature: <span th:text="${weather.temperature}">Temperature</span> °C</p>
+            <p>Humidity: <span th:text="${weather.humidity}">Humidity</span> %</p>
+            <p>Wind Speed: <span th:text="${weather.windSpeed}">Wind Speed</span> m/s</p>
+            <p>Cloudiness: <span th:text="${weather.cloudiness}">Cloudiness</span> %</p>
+            <p>Min Temp: <span th:text="${weather.minTemp}">Min Temp</span> °C</p>
+            <p>Max Temp: <span th:text="${weather.maxTemp}">Max Temp</span> °C</p>
+            <p>Pressure: <span th:text="${weather.pressure}">Pressure</span> hPa</p>
+            <p>Timestamp: <span th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Timestamp</span></p>
+        </div>
+    </div>
 
-    </tr>
-    </tbody>
-</table>
+    <div class="error-message" th:if="${error}">
+        <p th:text="${error}">Error message</p>
+    </div>
+</div>
 
 </body>
 </html>

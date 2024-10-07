@@ -17,7 +17,6 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/weather")
 public class WeatherController {
 
     private final WeatherRepository weatherRepository;
@@ -31,7 +30,6 @@ public class WeatherController {
     }
 
     WeatherData cachedData = weatherService.getWeather(city);
-
     if (cachedData != null) {
         return ResponseEntity.ok(cachedData);
     }

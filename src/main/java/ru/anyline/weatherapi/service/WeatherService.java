@@ -24,7 +24,6 @@ import java.util.Objects;
 public class WeatherService implements WService {
 
     private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
     private final WeatherRepository weatherRepository;
     private final RedisTemplate<String, WeatherData> redisTemplate;
     private final KafkaProducerService kafkaProducerService;
@@ -89,16 +88,14 @@ public class WeatherService implements WService {
         Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection().serverCommands();
     }
 
-    public WeatherData getWeather(String city) throws JsonProcessingException {
-
-        Object cachedData = redisTemplate.opsForValue().get(city);
-
-        LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) cachedData;
-
-        String jsonString = objectMapper.writeValueAsString(map);
-
-        return objectMapper.readValue(jsonString, WeatherData.class);
-
+    public WeatherData getWeather(String city) {
+        String apiUrl = buildApiUrl(city);
+        WeatherDTO response = restTemplate.getForObject(apiUrl, WeatherDTO.class);
+        WeatherData data = null;
+        if (response != null) {
+            data = convertToWeatherData(response);
+        }
+        return data;
     }
 
 }
