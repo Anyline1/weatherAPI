@@ -1,53 +1,115 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
-    <title>Weather Information</title>
+    <title>Weather Data</title>
     <meta charset="UTF-8">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid black;
-            text-align: left;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/weather.css">
 </head>
 <body>
 
-<h2>Weather Data</h2>
+<div class="page-container">
+    <div class="search-form">
+        <header>
+            <form onsubmit="fetchWeather(event)">
+                <label>
+                    <input type="text" name="city" placeholder="Enter city" required>
+                </label>
+                <button type="submit">Get Weather</button>
+            </form>
+        </header>
 
-<table>
-    <thead>
-    <tr>
-        <th>City</th>
-        <th>Temperature (°C)</th>
-        <th>Humidity (%)</th>
-        <th>Wind Speed (m/s)</th>
-        <th>Cloudiness (%)</th>
-        <th>Min Temp (°C)</th>
-        <th>Max Temp (°C)</th>
-        <th>Pressure (hPa)</th>
-        <th>Timestamp</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="weather : ${weatherList}">
-        <td th:text="${weather.city}">City</td>
-        <td th:text="${weather.temperature}">Temperature</td>
-        <td th:text="${weather.humidity}">Humidity</td>
-        <td th:text="${weather.windSpeed}">Wind Speed</td>
-        <td th:text="${weather.cloudiness}">Cloudiness</td>
-        <td th:text="${weather.minTemp}">Min Temp</td>
-        <td th:text="${weather.maxTemp}">Max Temp</td>
-        <td th:text="${weather.pressure}">Pressure</td>
-        <td th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Timestamp</td>
+        <div class="weather-info" style="display: none;">
+            <h2>Weather in <span class="city">City</span></h2>
+            <div class="weather-details">
+                <p>Temperature: <span class="temperature">Temperature</span> °C</p>
+                <p>Humidity: <span class="humidity">Humidity</span> %</p>
+                <p>Wind Speed: <span class="windSpeed">Wind Speed</span> m/s</p>
+                <p>Cloudiness: <span class="cloudiness">Cloudiness</span> %</p>
+                <p>Min Temp: <span class="minTemp">Min Temp</span> °C</p>
+                <p>Max Temp: <span class="maxTemp">Max Temp</span> °C</p>
+                <p>Pressure: <span class="pressure">Pressure</span> hPa</p>
+                <p>Timestamp: <span class="timestamp">Timestamp</span></p>
+            </div>
+        </div>
 
-    </tr>
-    </tbody>
-</table>
+        <div class="error-message" style="display: none;">
+            <p>Error message</p>
+        </div>
+    </div>
+
+    <div class="weather-table">
+        <h1>Saved Weather Data</h1>
+        <table>
+            <thead>
+            <tr>
+                <th>City</th>
+                <th>Temperature (°C)</th>
+                <th>Humidity (%)</th>
+                <th>Wind Speed (m/s)</th>
+                <th>Cloudiness (%)</th>
+                <th>Min Temp (°C)</th>
+                <th>Max Temp (°C)</th>
+                <th>Pressure (hPa)</th>
+                <th>Timestamp</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="weather : ${weatherList}">
+                <td th:text="${weather.city}">City</td>
+                <td th:text="${weather.temperature}">Temperature</td>
+                <td th:text="${weather.humidity}">Humidity</td>
+                <td th:text="${weather.windSpeed}">Wind Speed</td>
+                <td th:text="${weather.cloudiness}">Cloudiness</td>
+                <td th:text="${weather.minTemp}">Min Temp</td>
+                <td th:text="${weather.maxTemp}">Max Temp</td>
+                <td th:text="${weather.pressure}">Pressure</td>
+                <td th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Timestamp</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function fetchWeather(event) {
+        event.preventDefault();
+
+        const city = document.querySelector('input[name="city"]').value;
+
+        fetch(`/current?city=${city}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.querySelector('.error-message').style.display = 'block';
+                    document.querySelector('.error-message p').innerText = data.error;
+                    document.querySelector('.weather-info').style.display = 'none';
+                } else {
+                    document.querySelector('.error-message').style.display = 'none';
+                    document.querySelector('.weather-info').style.display = 'block';
+
+                    document.querySelector('.weather-info .city').innerText = data.city;
+                    document.querySelector('.weather-info .temperature').innerText = data.temperature + " °C";
+                    document.querySelector('.weather-info .humidity').innerText = data.humidity + " %";
+                    document.querySelector('.weather-info .windSpeed').innerText = data.windSpeed + " m/s";
+                    document.querySelector('.weather-info .cloudiness').innerText = data.cloudiness + " %";
+                    document.querySelector('.weather-info .minTemp').innerText = data.minTemp + " °C";
+                    document.querySelector('.weather-info .maxTemp').innerText = data.maxTemp + " °C";
+                    document.querySelector('.weather-info .pressure').innerText = data.pressure + " hPa";
+
+                    const date = new Date(data.timestamp);
+                    if (!isNaN(date.getTime())) {
+                        document.querySelector('.weather-info .timestamp').innerText = date.toLocaleString();
+                    } else {
+                        document.querySelector('.weather-info .timestamp').innerText = "Invalid Date";
+                    }
+                }
+            })
+            .catch(error => {
+                document.querySelector('.error-message').style.display = 'block';
+                document.querySelector('.error-message p').innerText = 'Failed to fetch weather data.';
+            });
+    }
+</script>
 
 </body>
 </html>
