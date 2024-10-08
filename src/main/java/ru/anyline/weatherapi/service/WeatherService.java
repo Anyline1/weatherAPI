@@ -1,7 +1,5 @@
 package ru.anyline.weatherapi.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,7 +13,6 @@ import ru.anyline.weatherapi.WeatherRepository;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -68,17 +65,21 @@ public class WeatherService implements WService {
         }
     }
 
+    private double kelvinToCelsius(double temperature) {
+        return Math.round((temperature - 273.15) * 10.0) / 10.0;
+    }
+
     private WeatherData convertToWeatherData(WeatherDTO response) {
 
         return WeatherData.builder()
                 .city(response.getName())
-                .temperature(response.getMain().getTemp())
+                .temperature(kelvinToCelsius(response.getMain().getTemp()))
                 .humidity(response.getMain().getHumidity())
                 .pressure(response.getMain().getPressure())
                 .windSpeed(response.getWind().getSpeed())
                 .cloudiness(response.getClouds().getAll())
-                .minTemp(response.getMain().getTempMin())
-                .maxTemp(response.getMain().getTempMax())
+                .minTemp(kelvinToCelsius(response.getMain().getTempMin()))
+                .maxTemp(kelvinToCelsius(response.getMain().getTempMax()))
                 .timestamp(LocalDateTime.now())
                 .build();
     }

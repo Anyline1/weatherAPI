@@ -21,14 +21,14 @@
         <div class="weather-info" style="display: none;">
             <h2>Weather in <span class="city">City</span></h2>
             <div class="weather-details">
-                <p>Temperature: <span class="temperature">Temperature</span> °C</p>
-                <p>Humidity: <span class="humidity">Humidity</span> %</p>
-                <p>Wind Speed: <span class="windSpeed">Wind Speed</span> m/s</p>
-                <p>Cloudiness: <span class="cloudiness">Cloudiness</span> %</p>
-                <p>Min Temp: <span class="minTemp">Min Temp</span> °C</p>
-                <p>Max Temp: <span class="maxTemp">Max Temp</span> °C</p>
-                <p>Pressure: <span class="pressure">Pressure</span> hPa</p>
-                <p>Timestamp: <span class="timestamp">Timestamp</span></p>
+                <p>Temperature: <span class="temperature">Температура</span> °C </p>
+                <p>Humidity: <span class="humidity">Влажность</span> %</p>
+                <p>Wind Speed: <span class="windSpeed">Скорость ветра</span> м/с</p>
+                <p>Cloudiness: <span class="cloudiness">Облачность</span> %</p>
+                <p>Min Temp: <span class="minTemp">Мин. темп.</span> °C</p>
+                <p>Max Temp: <span class="maxTemp">Макс. темп.</span> °C</p>
+                <p>Pressure: <span class="pressure">Атмосферное давление</span> кПа</p>
+                <p>Timestamp: <span class="timestamp">Дата</span></p>
             </div>
         </div>
 
@@ -38,32 +38,32 @@
     </div>
 
     <div class="weather-table">
-        <h1>Saved Weather Data</h1>
+        <h1>Сводка погоды по городам</h1>
         <table>
             <thead>
             <tr>
-                <th>City</th>
-                <th>Temperature (°C)</th>
-                <th>Humidity (%)</th>
-                <th>Wind Speed (m/s)</th>
-                <th>Cloudiness (%)</th>
-                <th>Min Temp (°C)</th>
-                <th>Max Temp (°C)</th>
-                <th>Pressure (hPa)</th>
-                <th>Timestamp</th>
+                <th>Город</th>
+                <th>Температура (°C)</th>
+                <th>Влажность (%)</th>
+                <th>Скорость ветра (м/с)</th>
+                <th>Облачность (%)</th>
+                <th>Мин. темп. (°C)</th>
+                <th>Макс. темп. (°C)</th>
+                <th>Атмосферное давление (кПа)</th>
+                <th>Дата</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="weather : ${weatherList}">
-                <td th:text="${weather.city}">City</td>
-                <td th:text="${weather.temperature}">Temperature</td>
-                <td th:text="${weather.humidity}">Humidity</td>
-                <td th:text="${weather.windSpeed}">Wind Speed</td>
-                <td th:text="${weather.cloudiness}">Cloudiness</td>
-                <td th:text="${weather.minTemp}">Min Temp</td>
-                <td th:text="${weather.maxTemp}">Max Temp</td>
-                <td th:text="${weather.pressure}">Pressure</td>
-                <td th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Timestamp</td>
+                <td th:text="${weather.city}">Город</td>
+                <td th:text="${weather.temperature}">Температура</td>
+                <td th:text="${weather.humidity}">Влажность</td>
+                <td th:text="${weather.windSpeed}">Скорость ветра</td>
+                <td th:text="${weather.cloudiness}">Облачность</td>
+                <td th:text="${weather.minTemp}">Минимум</td>
+                <td th:text="${weather.maxTemp}">Максимум</td>
+                <td th:text="${weather.pressure}">Давление</td>
+                <td th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Дата</td>
             </tr>
             </tbody>
         </table>
@@ -88,13 +88,13 @@
                     document.querySelector('.weather-info').style.display = 'block';
 
                     document.querySelector('.weather-info .city').innerText = data.city;
-                    document.querySelector('.weather-info .temperature').innerText = data.temperature + " °C";
-                    document.querySelector('.weather-info .humidity').innerText = data.humidity + " %";
-                    document.querySelector('.weather-info .windSpeed').innerText = data.windSpeed + " m/s";
-                    document.querySelector('.weather-info .cloudiness').innerText = data.cloudiness + " %";
-                    document.querySelector('.weather-info .minTemp').innerText = data.minTemp + " °C";
-                    document.querySelector('.weather-info .maxTemp').innerText = data.maxTemp + " °C";
-                    document.querySelector('.weather-info .pressure').innerText = data.pressure + " hPa";
+                    document.querySelector('.weather-info .temperature').innerText = data.temperature ;
+                    document.querySelector('.weather-info .humidity').innerText = data.humidity ;
+                    document.querySelector('.weather-info .windSpeed').innerText = data.windSpeed ;
+                    document.querySelector('.weather-info .cloudiness').innerText = data.cloudiness ;
+                    document.querySelector('.weather-info .minTemp').innerText = data.minTemp ;
+                    document.querySelector('.weather-info .maxTemp').innerText = data.maxTemp ;
+                    document.querySelector('.weather-info .pressure').innerText = data.pressure ;
 
                     const date = new Date(data.timestamp);
                     if (!isNaN(date.getTime())) {
