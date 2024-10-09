@@ -21,6 +21,7 @@ spring:
 weather:
   api:
     openWeatherMapUrl: http://api.openweathermap.org/data/2.5/weather?q=
+    openWeatherMapAirUrl: http://api.openweathermap.org/data/2.5/air_pollution/history?lat=50&lon=50&start=1606223802&end=1606482999&appid={API_KEY}
     weatherApiUrl: http://api.weatherapi.com/v1/current.json?key=
     key: 25e38454a0f2af6bc314bc8b76dc55b1
     provider: openweathermap
