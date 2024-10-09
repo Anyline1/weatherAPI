@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.anyline.weatherapi.entity.WeatherDTO;
 import ru.anyline.weatherapi.entity.WeatherData;
-import ru.anyline.weatherapi.WeatherRepository;
+import ru.anyline.weatherapi.repository.WeatherRepository;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
