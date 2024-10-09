@@ -24,7 +24,7 @@ public class AirPollutionServiceImpl implements AirPollutionService{
     @Value("${weather.api.key}")
     private String apiKey;
     @Override
-    public void fetchAirPollutionData() {
+    public AirPollutionDTO fetchAirPollutionData() {
 
         RestTemplate restTemplate = new RestTemplate();
         String url = openWeatherMapAirUrl.replace("{API_KEY}", apiKey);
@@ -55,5 +55,6 @@ public class AirPollutionServiceImpl implements AirPollutionService{
                 airPollutionRepository.save(record);
             }
         }
+        return response;
     }
 }

@@ -1,6 +1,8 @@
 package ru.anyline.weatherapi.service;
 
+import ru.anyline.weatherapi.entity.AirPollutionDTO;
+
 public interface AirPollutionService {
 
-    void fetchAirPollutionData();
+    AirPollutionDTO fetchAirPollutionData();
 }
