@@ -4,6 +4,63 @@
     <meta charset="UTF-8">
     <title>Weather and Pollution Summary</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script>
+
+        function fetchWeather(event) {
+            event.preventDefault();
+            const city = document.querySelector('input[name="city"]').value;
+
+            fetch(`/current?city=${city}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.querySelector('.weather-info').style.display = 'none';
+                        alert('Ошибка: ' + data.error);
+                    } else {
+                        document.querySelector('.weather-info').style.display = 'block';
+                        document.querySelector('.city').innerText = data.city;
+                        document.querySelector('.temperature').innerText = data.temperature;
+                        document.querySelector('.humidity').innerText = data.humidity;
+                        document.querySelector('.windSpeed').innerText = data.windSpeed;
+                        document.querySelector('.cloudiness').innerText = data.cloudiness;
+                        document.querySelector('.minTemp').innerText = data.minTemp;
+                        document.querySelector('.maxTemp').innerText = data.maxTemp;
+                        document.querySelector('.pressure').innerText = data.pressure;
+
+                        const date = new Date(data.timestamp * 1000);
+                        document.querySelector('.timestamp').innerText = date.toLocaleString();
+                    }
+                })
+                .catch(error => {
+                    alert('Ошибка при получении данных о погоде: ' + error);
+                });
+        }
+
+
+        function fetchPollution(event) {
+            event.preventDefault();
+            const city = document.querySelector('input[name="city"]').value;
+
+            fetch(`/pollution?city=${city}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('.pollution-info').style.display = 'block';
+                    document.querySelector('.pollution-city').innerText = data.city;
+                    document.querySelector('.aqi').innerText = data.aqi;
+                    document.querySelector('.co').innerText = data.components.co;
+                    document.querySelector('.no').innerText = data.components.no;
+                    document.querySelector('.no2').innerText = data.components.no2;
+                    document.querySelector('.o3').innerText = data.components.o3;
+                    document.querySelector('.so2').innerText = data.components.so2;
+                    document.querySelector('.pm25').innerText = data.components.pm2_5;
+                    document.querySelector('.pm10').innerText = data.components.pm10;
+                    document.querySelector('.nh3').innerText = data.components.nh3;
+                })
+                .catch(error => {
+                    alert('Ошибка при получении данных о загрязнении: ' + error);
+                });
+        }
+    </script>
 </head>
 <body>
 <div class="container">
@@ -39,44 +96,46 @@
     </table>
 
     <h2>Узнать погоду в городе</h2>
-    <form th:action="@{/current}" method="get">
+    <form onsubmit="fetchWeather(event)">
         <label>
             <input type="text" name="city" placeholder="Введите название города" required>
         </label>
         <button type="submit">Показать погоду</button>
     </form>
 
-    <div th:if="${weather}">
-        <h3>Погода в <span th:text="${weather.city}">City</span></h3>
-        <p>Температура: <span th:text="${weather.temperature}">Температура</span> °C</p>
-        <p>Влажность: <span th:text="${weather.humidity}">Влажность</span> %</p>
-        <p>Скорость ветра: <span th:text="${weather.windSpeed}">Скорость ветра</span> м/с</p>
-        <p>Облачность: <span th:text="${weather.cloudiness}">Облачность</span> %</p>
-        <p>Мин. темп.: <span th:text="${weather.minTemp}">Мин. темп.</span> °C</p>
-        <p>Макс. темп.: <span th:text="${weather.maxTemp}">Макс. темп.</span> °C</p>
-        <p>Давление: <span th:text="${weather.pressure}">Давление</span> кПа</p>
-        <p>Дата: <span th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Дата</span></p>
+    <div class="weather-info" style="display: none;">
+        <h2>Weather in <span class="city">City</span></h2>
+        <div class="weather-details">
+            <p>Temperature: <span class="temperature">Температура</span> °C </p>
+            <p>Humidity: <span class="humidity">Влажность</span> %</p>
+            <p>Wind Speed: <span class="windSpeed">Скорость ветра</span> м/с</p>
+            <p>Cloudiness: <span class="cloudiness">Облачность</span> %</p>
+            <p>Min Temp: <span class="minTemp">Мин. темп.</span> °C</p>
+            <p>Max Temp: <span class="maxTemp">Макс. темп.</span> °C</p>
+            <p>Pressure: <span class="pressure">Атмосферное давление</span> кПа</p>
+            <p>Timestamp: <span class="timestamp">Дата</span></p>
+        </div>
     </div>
 
     <h2>Уровень загрязнения воздуха</h2>
-    <form th:action="@{/pollution}" method="get">
+    <form onsubmit="fetchPollution(event)">
         <label>
             <input type="text" name="city" placeholder="Введите название города" required>
         </label>
         <button type="submit">Показать данные</button>
     </form>
 
-    <div th:if="${pollution}">
-        <h3>Уровень загрязнения в <span th:text="${pollution.city}">City</span></h3>
-        <p>AQI: <span th:text="${pollution.aqi}">AQI</span></p>
-        <p>CO: <span th:text="${pollution.components.co}">CO</span> μg/m³</p>
-        <p>NO: <span th:text="${pollution.components.no}">NO</span> μg/m³</p>
-        <p>NO₂: <span th:text="${pollution.components.no2}">NO₂</span> μg/m³</p>
-        <p>O₃: <span th:text="${pollution.components.o3}">O₃</span> μg/m³</p>
-        <p>SO₂: <span th:text="${pollution.components.so2}">SO₂</span> μg/m³</p>
-        <p>PM2.5: <span th:text="${pollution.components.pm2_5}">PM2.5</span> μg/m³</p>
-        <p>PM10: <span th:text="${pollution.components.pm10}">PM10</span> μg/m³</p>
-        <p>NH₃: <span th:text="${pollution.components.nh3}">NH₃</span> μg/m³</p>
+    <div class="pollution-info" style="display: none;">
+        <h3>Уровень загрязнения в <span class="pollution-city">City</span></h3>
+        <p>AQI: <span class="aqi">AQI</span></p>
+        <p>CO: <span class="co">CO</span> μg/m³</p>
+        <p>NO: <span class="no">NO</span> μg/m³</p>
+        <p>NO₂: <span class="no2">NO₂</span> μg/m³</p>
+        <p>O₃: <span class="o3">O₃</span> μg/m³</p>
+        <p>SO₂: <span class="so2">SO₂</span> μg/m³</p>
+        <p>PM2.5: <span class="pm25">PM2.5</span> μg/m³</p>
+        <p>PM10: <span class="pm10">PM10</span> μg/m³</p>
+        <p>NH₃: <span class="nh3">NH₃</span> μg/m³</p>
     </div>
 
 </div>
