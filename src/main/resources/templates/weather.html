@@ -1,115 +1,84 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Weather Data</title>
     <meta charset="UTF-8">
+    <title>Weather and Pollution Summary</title>
     <link rel="stylesheet" href="/css/weather.css">
 </head>
 <body>
+<div class="container">
 
-<div class="page-container">
-    <div class="search-form">
-        <header>
-            <form onsubmit="fetchWeather(event)">
-                <label>
-                    <input type="text" name="city" placeholder="Enter city" required>
-                </label>
-                <button type="submit">Get Weather</button>
-            </form>
-        </header>
+    <h1>Сводка погоды по городам</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Город</th>
+            <th>Температура (°C)</th>
+            <th>Влажность (%)</th>
+            <th>Скорость ветра (м/с)</th>
+            <th>Облачность (%)</th>
+            <th>Мин. темп. (°C)</th>
+            <th>Макс. темп. (°C)</th>
+            <th>Давление (кПа)</th>
+            <th>Дата</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="weather : ${weatherList}">
+            <td th:text="${weather.city}">Город</td>
+            <td th:text="${weather.temperature}">Температура</td>
+            <td th:text="${weather.humidity}">Влажность</td>
+            <td th:text="${weather.windSpeed}">Скорость ветра</td>
+            <td th:text="${weather.cloudiness}">Облачность</td>
+            <td th:text="${weather.minTemp}">Мин. темп.</td>
+            <td th:text="${weather.maxTemp}">Макс. темп.</td>
+            <td th:text="${weather.pressure}">Давление</td>
+            <td th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Дата</td>
+        </tr>
+        </tbody>
+    </table>
 
-        <div class="weather-info" style="display: none;">
-            <h2>Weather in <span class="city">City</span></h2>
-            <div class="weather-details">
-                <p>Temperature: <span class="temperature">Температура</span> °C </p>
-                <p>Humidity: <span class="humidity">Влажность</span> %</p>
-                <p>Wind Speed: <span class="windSpeed">Скорость ветра</span> м/с</p>
-                <p>Cloudiness: <span class="cloudiness">Облачность</span> %</p>
-                <p>Min Temp: <span class="minTemp">Мин. темп.</span> °C</p>
-                <p>Max Temp: <span class="maxTemp">Макс. темп.</span> °C</p>
-                <p>Pressure: <span class="pressure">Атмосферное давление</span> кПа</p>
-                <p>Timestamp: <span class="timestamp">Дата</span></p>
-            </div>
-        </div>
+    <h2>Узнать погоду в городе</h2>
+    <form th:action="@{/current}" method="get">
+        <label>
+            <input type="text" name="city" placeholder="Введите название города" required>
+        </label>
+        <button type="submit">Показать погоду</button>
+    </form>
 
-        <div class="error-message" style="display: none;">
-            <p>Error message</p>
-        </div>
+    <div th:if="${weather}">
+        <h3>Погода в <span th:text="${weather.city}">City</span></h3>
+        <p>Температура: <span th:text="${weather.temperature}">Температура</span> °C</p>
+        <p>Влажность: <span th:text="${weather.humidity}">Влажность</span> %</p>
+        <p>Скорость ветра: <span th:text="${weather.windSpeed}">Скорость ветра</span> м/с</p>
+        <p>Облачность: <span th:text="${weather.cloudiness}">Облачность</span> %</p>
+        <p>Мин. темп.: <span th:text="${weather.minTemp}">Мин. темп.</span> °C</p>
+        <p>Макс. темп.: <span th:text="${weather.maxTemp}">Макс. темп.</span> °C</p>
+        <p>Давление: <span th:text="${weather.pressure}">Давление</span> кПа</p>
+        <p>Дата: <span th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Дата</span></p>
     </div>
 
-    <div class="weather-table">
-        <h1>Сводка погоды по городам</h1>
-        <table>
-            <thead>
-            <tr>
-                <th>Город</th>
-                <th>Температура (°C)</th>
-                <th>Влажность (%)</th>
-                <th>Скорость ветра (м/с)</th>
-                <th>Облачность (%)</th>
-                <th>Мин. темп. (°C)</th>
-                <th>Макс. темп. (°C)</th>
-                <th>Атмосферное давление (кПа)</th>
-                <th>Дата</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="weather : ${weatherList}">
-                <td th:text="${weather.city}">Город</td>
-                <td th:text="${weather.temperature}">Температура</td>
-                <td th:text="${weather.humidity}">Влажность</td>
-                <td th:text="${weather.windSpeed}">Скорость ветра</td>
-                <td th:text="${weather.cloudiness}">Облачность</td>
-                <td th:text="${weather.minTemp}">Минимум</td>
-                <td th:text="${weather.maxTemp}">Максимум</td>
-                <td th:text="${weather.pressure}">Давление</td>
-                <td th:text="${#temporals.format(weather.timestamp, 'yyyy-MM-dd HH:mm')}">Дата</td>
-            </tr>
-            </tbody>
-        </table>
+    <h2>Уровень загрязнения воздуха</h2>
+    <form th:action="@{/pollution}" method="get">
+        <label>
+            <input type="text" name="city" placeholder="Введите название города" required>
+        </label>
+        <button type="submit">Показать данные</button>
+    </form>
+
+    <div th:if="${pollution}">
+        <h3>Уровень загрязнения в <span th:text="${pollution.city}">City</span></h3>
+        <p>AQI: <span th:text="${pollution.aqi}">AQI</span></p>
+        <p>CO: <span th:text="${pollution.components.co}">CO</span> μg/m³</p>
+        <p>NO: <span th:text="${pollution.components.no}">NO</span> μg/m³</p>
+        <p>NO₂: <span th:text="${pollution.components.no2}">NO₂</span> μg/m³</p>
+        <p>O₃: <span th:text="${pollution.components.o3}">O₃</span> μg/m³</p>
+        <p>SO₂: <span th:text="${pollution.components.so2}">SO₂</span> μg/m³</p>
+        <p>PM2.5: <span th:text="${pollution.components.pm2_5}">PM2.5</span> μg/m³</p>
+        <p>PM10: <span th:text="${pollution.components.pm10}">PM10</span> μg/m³</p>
+        <p>NH₃: <span th:text="${pollution.components.nh3}">NH₃</span> μg/m³</p>
     </div>
+
 </div>
-
-<script>
-    function fetchWeather(event) {
-        event.preventDefault();
-
-        const city = document.querySelector('input[name="city"]').value;
-
-        fetch(`/current?city=${city}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.querySelector('.error-message').style.display = 'block';
-                    document.querySelector('.error-message p').innerText = data.error;
-                    document.querySelector('.weather-info').style.display = 'none';
-                } else {
-                    document.querySelector('.error-message').style.display = 'none';
-                    document.querySelector('.weather-info').style.display = 'block';
-
-                    document.querySelector('.weather-info .city').innerText = data.city;
-                    document.querySelector('.weather-info .temperature').innerText = data.temperature ;
-                    document.querySelector('.weather-info .humidity').innerText = data.humidity ;
-                    document.querySelector('.weather-info .windSpeed').innerText = data.windSpeed ;
-                    document.querySelector('.weather-info .cloudiness').innerText = data.cloudiness ;
-                    document.querySelector('.weather-info .minTemp').innerText = data.minTemp ;
-                    document.querySelector('.weather-info .maxTemp').innerText = data.maxTemp ;
-                    document.querySelector('.weather-info .pressure').innerText = data.pressure ;
-
-                    const date = new Date(data.timestamp);
-                    if (!isNaN(date.getTime())) {
-                        document.querySelector('.weather-info .timestamp').innerText = date.toLocaleString();
-                    } else {
-                        document.querySelector('.weather-info .timestamp').innerText = "Invalid Date";
-                    }
-                }
-            })
-            .catch(error => {
-                document.querySelector('.error-message').style.display = 'block';
-                document.querySelector('.error-message p').innerText = 'Failed to fetch weather data.';
-            });
-    }
-</script>
-
 </body>
 </html>
